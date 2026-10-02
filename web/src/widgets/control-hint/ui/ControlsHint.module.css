@@ -1,0 +1,128 @@
+.root {
+  position: absolute;
+  left: 16px;
+  bottom: 16px;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+
+  --hint-bg: #ffffff;
+  --hint-fg: #1f2328;
+  --hint-muted: #656d76;
+  --hint-border: rgba(0, 0, 0, 0.12);
+  --hint-kbd-bg: #f3f4f6;
+}
+
+@media (prefers-color-scheme: dark) {
+  .root {
+    --hint-bg: #1e1f22;
+    --hint-fg: #e6e6e6;
+    --hint-muted: #9aa0a6;
+    --hint-border: rgba(255, 255, 255, 0.14);
+    --hint-kbd-bg: #2b2d31;
+  }
+}
+
+.panel,
+.toggle {
+  background: var(--hint-bg);
+  color: var(--hint-fg);
+  border: 1px solid var(--hint-border);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+}
+
+.panel {
+  width: 340px;
+  max-width: calc(100vw - 32px);
+  padding: 12px 14px;
+  border-radius: 12px;
+  font:
+    13px/1.4 system-ui,
+    sans-serif;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+
+.title {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 8px;
+}
+
+.row {
+  display: grid;
+  gap: 4px;
+}
+
+.keys {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px;
+}
+
+.kbd {
+  padding: 1px 6px;
+  border: 1px solid var(--hint-border);
+  border-bottom-width: 2px;
+  border-radius: 6px;
+  background: var(--hint-kbd-bg);
+  font: inherit;
+  font-size: 12px;
+}
+
+.plus {
+  color: var(--hint-muted);
+}
+
+.action {
+  color: var(--hint-muted);
+}
+
+.toggle,
+.iconButton {
+  display: inline-grid;
+  place-items: center;
+  cursor: pointer;
+}
+
+.toggle {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+}
+
+.iconButton {
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  border: none;
+  border-radius: 6px;
+  background: transparent;
+  color: var(--hint-muted);
+}
+
+.iconButton:hover {
+  background: var(--hint-kbd-bg);
+}
+
+.toggle:focus-visible,
+.iconButton:focus-visible {
+  outline: 2px solid #6366f1;
+  outline-offset: 2px;
+}
