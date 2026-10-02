@@ -1,0 +1,15 @@
+{
+  "name": "server",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "@y/websocket-server": "^0.1.5"
+  },
+  "scripts": {
+    "dev": "cross-env HOST=localhost PORT=1234 y-websocket"
+  },
+  "devDependencies": {
+    "cross-env": "^10.1.0"
+  }
+}

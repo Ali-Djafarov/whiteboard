@@ -1,0 +1,26 @@
+{
+  "name": "whiteboard",
+  "version": "1.0.0",
+  "private": true,
+  "workspaces": [
+    "web",
+    "server"
+  ],
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "concurrently -n web,server \"npm run dev -w web\" \"npm run dev -w server\"",
+    "typecheck": "npm run typecheck --workspaces --if-present",
+    "lint": "npm run lint --workspaces --if-present",
+    "test": "npm run test --workspaces --if-present",
+    "build": "npm run build -w web"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "devDependencies": {
+    "concurrently": "^10.0.5",
+    "cross-env": "^10.1.0"
+  }
+}
