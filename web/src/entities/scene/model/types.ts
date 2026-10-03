@@ -1,49 +1,44 @@
-export type Point = {
-  x: number;
-  y: number;
-};
+import type { Point } from "@/shared/canvas/geometry";
 
-export type Rectangle = {
-  id: string;
-  type: "rectangle";
+type ElementBase = { id: string; z: number };
+
+type BoxBase = ElementBase & {
   x: number;
   y: number;
   width: number;
   height: number;
 };
 
-export type Ellipse = {
-  id: string;
-  type: "ellipse";
-  x: number;
-  y: number;
-  width: number;
-  height: number;
-};
+export type RectangleElement = BoxBase & { type: "rectangle" };
 
-export type Arrow = {
-  id: string;
+export type EllipseElement = BoxBase & { type: "ellipse" };
+
+export type ArrowElement = ElementBase & {
   type: "arrow";
   start: Point;
   end: Point;
 };
 
-export type Text = {
-  id: string;
+export type TextElement = ElementBase & {
   type: "text";
   x: number;
   y: number;
   text: string;
+  fontSize: number;
 };
 
-export type FreeDraw = {
-  id: string;
+export type FreeDrawElement = ElementBase & {
   type: "free-draw";
+  x: number;
+  y: number;
   points: Point[];
 };
 
-export type SceneElement = Rectangle | Ellipse | Arrow | Text | FreeDraw;
+export type SceneElement =
+  | RectangleElement
+  | EllipseElement
+  | ArrowElement
+  | TextElement
+  | FreeDrawElement;
 
-export type Scene = {
-  elements: SceneElement[];
-};
+export type Scene = { elements: SceneElement[] };
