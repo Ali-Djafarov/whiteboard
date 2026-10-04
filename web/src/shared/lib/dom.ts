@@ -1,5 +1,4 @@
-export function isInteractiveTarget(target: EventTarget | null): boolean {
+export function isTextEditingTarget(target: EventTarget | null): boolean {
   if (!(target instanceof HTMLElement)) return false;
-  if (target.isContentEditable) return true;
-  return /^(INPUT|TEXTAREA|SELECT|BUTTON|A)$/.test(target.tagName);
+  return target.isContentEditable || /^(INPUT|TEXTAREA|SELECT)$/.test(target.tagName);
 }
