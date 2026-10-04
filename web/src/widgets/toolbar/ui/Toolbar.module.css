@@ -1,0 +1,59 @@
+.root {
+  position: absolute;
+  top: 16px;
+  left: 50%;
+  z-index: 10;
+  display: flex;
+  gap: 4px;
+  padding: 4px;
+  transform: translateX(-50%);
+  border-radius: 12px;
+  border: 1px solid var(--tb-border);
+  background: var(--tb-bg);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+
+  --tb-bg: #ffffff;
+  --tb-fg: #1f2328;
+  --tb-border: rgba(0, 0, 0, 0.12);
+  --tb-hover: #f3f4f6;
+  --tb-active-bg: #e0e7ff;
+  --tb-active-fg: #4338ca;
+}
+
+@media (prefers-color-scheme: dark) {
+  .root {
+    --tb-bg: #1e1f22;
+    --tb-fg: #e6e6e6;
+    --tb-border: rgba(255, 255, 255, 0.14);
+    --tb-hover: #2b2d31;
+    --tb-active-bg: #312e81;
+    --tb-active-fg: #c7d2fe;
+  }
+}
+
+.button {
+  display: inline-grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  border: none;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--tb-fg);
+  cursor: pointer;
+}
+
+.button:hover {
+  background: var(--tb-hover);
+}
+
+.button[aria-pressed="true"] {
+  background: var(--tb-active-bg);
+  color: var(--tb-active-fg);
+}
+
+.button:focus-visible {
+  outline: 2px solid #6366f1;
+  outline-offset: 2px;
+}
