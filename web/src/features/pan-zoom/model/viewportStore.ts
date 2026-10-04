@@ -1,6 +1,6 @@
 import { create } from "zustand";
-import { panBy, zoomAt, type Viewport } from "@/shared/canvas/viewport";
-import type { Point } from "@/shared/canvas/geometry";
+import { panBy, zoomAt, type Viewport } from "@/shared/canvas";
+import type { Point } from "@/shared/canvas";
 
 type ViewportState = {
   viewport: Viewport;
