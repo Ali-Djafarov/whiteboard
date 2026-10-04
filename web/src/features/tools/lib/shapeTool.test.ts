@@ -2,7 +2,11 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 import { useToolStore } from "../model/toolStore";
 import { createShapeTool } from "./shapeTool";
 
-const at = (x: number, y: number, zoom = 1) => ({ point: { x, y }, zoom });
+const at = (x: number, y: number, zoom = 1) => ({
+  point: { x, y },
+  zoom,
+  shiftKey: false,
+});
 
 describe("shapeTool", () => {
   const add = vi.fn();
@@ -27,7 +31,13 @@ describe("shapeTool", () => {
 
     tool.onPointerUp(at(110, 60));
     expect(useToolStore.getState().draft).toBeNull();
-    expect(add).toHaveBeenCalledWith({ type: "rectangle", x: 10, y: 10, width: 100, height: 50 });
+    expect(add).toHaveBeenCalledWith({
+      type: "rectangle",
+      x: 10,
+      y: 10,
+      width: 100,
+      height: 50,
+    });
   });
 
   it("commits a normalized shape when dragged up and to the left", () => {
@@ -36,7 +46,13 @@ describe("shapeTool", () => {
     tool.onPointerDown(at(110, 60));
     tool.onPointerUp(at(10, 10));
 
-    expect(add).toHaveBeenCalledWith({ type: "rectangle", x: 10, y: 10, width: 100, height: 50 });
+    expect(add).toHaveBeenCalledWith({
+      type: "rectangle",
+      x: 10,
+      y: 10,
+      width: 100,
+      height: 50,
+    });
   });
 
   it("creates ellipses with the ellipse tool", () => {
@@ -45,7 +61,13 @@ describe("shapeTool", () => {
     tool.onPointerDown(at(0, 0));
     tool.onPointerUp(at(40, 20));
 
-    expect(add).toHaveBeenCalledWith({ type: "ellipse", x: 0, y: 0, width: 40, height: 20 });
+    expect(add).toHaveBeenCalledWith({
+      type: "ellipse",
+      x: 0,
+      y: 0,
+      width: 40,
+      height: 20,
+    });
   });
 
   it("ignores a click without dragging", () => {
