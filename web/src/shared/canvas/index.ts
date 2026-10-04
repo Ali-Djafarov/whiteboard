@@ -10,5 +10,12 @@ export {
   MAX_ZOOM,
 } from "./viewport";
 export type { Viewport } from "./viewport";
-export { normalizeRect } from "./geometry";
+export {
+  normalizeRect,
+  rectBetween,
+  pointInRect,
+  inflateRect,
+  rectContainsRect,
+  distanceToSegment,
+} from "./geometry";
 export type { Point, Rect } from "./geometry";
