@@ -1,7 +1,7 @@
-import { Circle, MousePointer2, Square } from "lucide-react";
+import { Circle, MousePointer2, Grid2X2, Square } from "lucide-react";
 import { activateTool, useToolStore, type ToolId } from "@/features/tools";
 import styles from "./Toolbar.module.css";
-
+import { useGridStore } from "@/features/grid";
 const ITEMS = [
   { id: "select", label: "Выбор", hotkey: "V", Icon: MousePointer2 },
   { id: "rectangle", label: "Прямоугольник", hotkey: "R", Icon: Square },
@@ -15,6 +15,8 @@ const ITEMS = [
 
 export function Toolbar() {
   const activeTool = useToolStore((s) => s.activeTool);
+  const isGridVisible = useGridStore((s) => s.isVisible);
+  const toggleGrid = useGridStore((s) => s.toggleGrid);
 
   return (
     <div className={styles.root} role="toolbar" aria-label="Инструменты">
@@ -31,6 +33,16 @@ export function Toolbar() {
           <Icon size={18} />
         </button>
       ))}
+      <button
+        type="button"
+        className={styles.button}
+        aria-pressed={isGridVisible}
+        aria-label={isGridVisible ? "Скрыть сетку" : "Показать сетку"}
+        title={isGridVisible ? "Скрыть сетку" : "Показать сетку"}
+        onClick={toggleGrid}
+      >
+        <Grid2X2 size={18} />
+      </button>
     </div>
   );
 }

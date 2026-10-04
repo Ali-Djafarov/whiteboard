@@ -1,4 +1,4 @@
-import type { Rect, Viewport } from "@/shared/canvas";
+import { drawGrid, type Rect, type Viewport } from "@/shared/canvas";
 import type { Scene } from "../model/types";
 import type { NewElement } from "../model/sceneDoc";
 import { drawElement } from "./drawElement";
@@ -8,6 +8,7 @@ export type RenderOverlay = {
   draft?: NewElement | null;
   selectedIds?: readonly string[];
   marquee?: Rect | null;
+  isGridVisible?: boolean;
 };
 
 export function renderScene(
@@ -15,10 +16,16 @@ export function renderScene(
   scene: Scene,
   viewport: Viewport,
   overlay: RenderOverlay = {},
+  isGridVisible = true,
 ): void {
   const { draft, selectedIds, marquee } = overlay;
 
   ctx.save();
+
+  if (isGridVisible) {
+    drawGrid(ctx, viewport);
+  }
+
   ctx.translate(viewport.offsetX, viewport.offsetY);
   ctx.scale(viewport.zoom, viewport.zoom);
 

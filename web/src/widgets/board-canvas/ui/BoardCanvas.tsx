@@ -6,6 +6,7 @@ import { useSceneStore } from "@/entities/scene";
 import styles from "./BoardCanvas.module.css";
 
 import { useToolHotkeys, useToolPointer, useToolStore } from "@/features/tools";
+import { useGridStore } from "@/features/grid";
 
 const getViewport = () => useViewportStore.getState().viewport;
 
@@ -17,6 +18,7 @@ export function BoardCanvas() {
   const activeTool = useToolStore((s) => s.activeTool);
   const selectedIds = useToolStore((s) => s.selectedIds);
   const marquee = useToolStore((s) => s.marquee);
+  const isGridVisible = useGridStore((s) => s.isVisible);
 
   const pan = usePanZoom(containerRef);
   const tool = useToolPointer(containerRef, getViewport);
@@ -24,8 +26,14 @@ export function BoardCanvas() {
 
   const draw = useCallback(
     (ctx: CanvasRenderingContext2D) =>
-      renderScene(ctx, scene, viewport, { draft, selectedIds, marquee }),
-    [scene, viewport, draft, selectedIds, marquee],
+      renderScene(
+        ctx,
+        scene,
+        viewport,
+        { draft, selectedIds, marquee },
+        isGridVisible,
+      ),
+    [scene, viewport, draft, selectedIds, marquee, isGridVisible],
   );
 
   const onPointerDown = (e: React.PointerEvent<HTMLElement>) => {
