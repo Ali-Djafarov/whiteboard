@@ -1,7 +1,10 @@
 export type Control = { keys: string[]; action: string };
 
 export function detectMac(): boolean {
-  return typeof navigator !== "undefined" && /Mac|iPhone|iPad/.test(navigator.userAgent);
+  return (
+    typeof navigator !== "undefined" &&
+    /Mac|iPhone|iPad/.test(navigator.userAgent)
+  );
 }
 
 export function getControls(isMac: boolean = detectMac()): Control[] {
@@ -13,5 +16,9 @@ export function getControls(isMac: boolean = detectMac()): Control[] {
     { keys: ["Пробел", "Перетаскивание"], action: "Двигать холст" },
     { keys: ["Средняя кнопка", "Перетаскивание"], action: "Двигать холст" },
     { keys: ["?"], action: "Показать или скрыть подсказку" },
+    { keys: ["Перетаскивание"], action: "Нарисовать фигуру" },
+    { keys: ["R"], action: "Прямоугольник" },
+    { keys: ["O"], action: "Эллипс" },
+    { keys: ["Esc"], action: "Отменить рисование" },
   ];
 }

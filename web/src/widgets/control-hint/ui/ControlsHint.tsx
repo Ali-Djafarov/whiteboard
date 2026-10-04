@@ -1,6 +1,6 @@
 import { Fragment, useEffect, useMemo, useState } from "react";
 import { HelpCircle, X } from "lucide-react";
-import { isInteractiveTarget } from "@/shared/lib/dom";
+import { isTextEditingTarget } from "@/shared/lib/dom";
 import { getControls } from "../model/controls";
 import styles from "./ControlsHint.module.css";
 
@@ -41,7 +41,7 @@ export function ControlsHint() {
         !e.ctrlKey &&
         !e.metaKey &&
         !e.altKey &&
-        !isInteractiveTarget(e.target)
+        !isTextEditingTarget(e.target)
       ) {
         setOpen((value) => !value);
       }
