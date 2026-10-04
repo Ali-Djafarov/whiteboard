@@ -1,10 +1,10 @@
 1. Scene model              ✅
 2. Renderer                 ✅
 3. Canvas + render loop     ✅
-4. Viewport (pan/zoom)      ← сейчас
-5. Mouse → world coords     (маленький шаг, делается вместе с 6)
-6. Scene store поверх Yjs   (локально, без сервера)
-7. Drawing tools            (state machine)
+4. Viewport (pan/zoom)      ✅
+5. Mouse → world coords     ✅
+6. Scene store поверх Yjs   ✅
+7. Drawing tools            (state machine)  <-- я тут
 8. Selection + hit testing
 9. Move / resize
 10. Undo/redo               (Y.UndoManager)
