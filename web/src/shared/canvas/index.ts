@@ -8,8 +8,9 @@ export {
   clampZoom,
   MIN_ZOOM,
   MAX_ZOOM,
+  stepZoomToward,
 } from "./viewport";
-export type { Viewport } from "./viewport";
+export type { Viewport, ZoomTarget } from "./viewport";
 export {
   normalizeRect,
   rectBetween,

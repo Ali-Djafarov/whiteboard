@@ -1,14 +1,41 @@
 import type { Point } from "./geometry";
 
-
 export const MIN_ZOOM = 0.1;
 export const MAX_ZOOM = 8;
+const ZOOM_EPSILON = 0.001;
+
+export type ZoomTarget = {
+  zoom: number;
+  anchor: Point;
+  world: Point;
+};
 
 export type Viewport = {
   offsetX: number;
   offsetY: number;
   zoom: number;
 };
+
+export function stepZoomToward(
+  viewport: Viewport,
+  target: ZoomTarget,
+  dtMs: number,
+  tauMs: number,
+): { viewport: Viewport; done: boolean } {
+  const ratio = target.zoom / viewport.zoom;
+  const done = Math.abs(Math.log(ratio)) < ZOOM_EPSILON;
+  const k = 1 - Math.exp(-dtMs / tauMs);
+  const zoom = done ? target.zoom : viewport.zoom * Math.pow(ratio, k);
+
+  return {
+    viewport: {
+      zoom,
+      offsetX: target.anchor.x - target.world.x * zoom,
+      offsetY: target.anchor.y - target.world.y * zoom,
+    },
+    done,
+  };
+}
 
 export function clampZoom(zoom: number): number {
   return Math.min(MAX_ZOOM, Math.max(MIN_ZOOM, zoom));

@@ -8,3 +8,11 @@ export function isTextEditingTarget(target: EventTarget | null): boolean {
 export function isModalOpen(): boolean {
   return document.querySelector("dialog[open]") !== null;
 }
+
+export function prefersReducedMotion(): boolean {
+  return (
+    typeof window !== "undefined" &&
+    typeof window.matchMedia === "function" &&
+    window.matchMedia("(prefers-reduced-motion: reduce)").matches
+  );
+}
