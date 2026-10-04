@@ -1,11 +1,17 @@
-import { Circle, Square } from "lucide-react";
+import { Circle, MousePointer2, Square } from "lucide-react";
 import { activateTool, useToolStore, type ToolId } from "@/features/tools";
 import styles from "./Toolbar.module.css";
 
 const ITEMS = [
+  { id: "select", label: "Выбор", hotkey: "V", Icon: MousePointer2 },
   { id: "rectangle", label: "Прямоугольник", hotkey: "R", Icon: Square },
   { id: "ellipse", label: "Эллипс", hotkey: "O", Icon: Circle },
-] satisfies { id: ToolId; label: string; hotkey: string; Icon: typeof Square }[];
+] satisfies {
+  id: ToolId;
+  label: string;
+  hotkey: string;
+  Icon: typeof Square;
+}[];
 
 export function Toolbar() {
   const activeTool = useToolStore((s) => s.activeTool);

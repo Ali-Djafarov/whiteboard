@@ -1,128 +1,159 @@
-.root {
+.toggle {
   position: absolute;
-  left: 16px;
+  right: 16px;
   bottom: 16px;
   z-index: 10;
+  display: inline-grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  border: 1px solid var(--border);
+  border-radius: 50%;
+  background: var(--surface);
+  color: var(--text);
+  box-shadow: var(--shadow-float);
+  cursor: pointer;
+}
+
+.toggle:hover {
+  background: var(--surface-hover);
+}
+
+.dialog {
+  box-sizing: border-box;
+  width: min(760px, calc(100vw - 32px));
+  max-height: calc(100vh - 32px);
+  max-height: calc(100dvh - 32px);
+  padding: 0;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  background: var(--surface);
+  color: var(--text);
+  box-shadow: var(--shadow-float);
+  overflow: hidden;
+}
+
+.dialog::backdrop {
+  background: rgba(0, 0, 0, 0.45);
+}
+
+.content {
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
-  gap: 8px;
-
-  --hint-bg: #ffffff;
-  --hint-fg: #1f2328;
-  --hint-muted: #656d76;
-  --hint-border: rgba(0, 0, 0, 0.12);
-  --hint-kbd-bg: #f3f4f6;
-}
-
-@media (prefers-color-scheme: dark) {
-  .root {
-    --hint-bg: #1e1f22;
-    --hint-fg: #e6e6e6;
-    --hint-muted: #9aa0a6;
-    --hint-border: rgba(255, 255, 255, 0.14);
-    --hint-kbd-bg: #2b2d31;
-  }
-}
-
-.panel,
-.toggle {
-  background: var(--hint-bg);
-  color: var(--hint-fg);
-  border: 1px solid var(--hint-border);
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
-}
-
-.panel {
-  width: 340px;
-  max-width: calc(100vw - 32px);
-  padding: 12px 14px;
-  border-radius: 12px;
-  font:
-    13px/1.4 system-ui,
-    sans-serif;
+  max-height: calc(100vh - 32px);
+  max-height: calc(100dvh - 32px);
+  font-size: 14px;
+  line-height: 1.4;
+  text-align: left;
 }
 
 .header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 8px;
+  padding: 16px 24px 12px;
 }
 
 .title {
   margin: 0;
-  font-size: 14px;
+  font-size: 18px;
   font-weight: 600;
 }
 
+.iconButton {
+  display: inline-grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  border: none;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--text-muted);
+  cursor: pointer;
+}
+
+.iconButton:hover {
+  background: var(--surface-hover);
+}
+
+.toggle:focus-visible,
+.iconButton:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.columns {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 32px;
+  padding: 4px 24px 24px;
+  overflow-y: auto;
+}
+
+.column {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  min-width: 0;
+}
+
+.groupTitle {
+  margin: 0 0 12px;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
 .list {
+  display: grid;
+  gap: 10px;
   margin: 0;
   padding: 0;
   list-style: none;
-  display: grid;
-  gap: 8px;
 }
 
 .row {
-  display: grid;
-  gap: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.action {
+  min-width: 0;
 }
 
 .keys {
   display: flex;
   flex-wrap: wrap;
+  flex-shrink: 0;
   align-items: center;
+  justify-content: flex-end;
   gap: 4px;
+  max-width: 55%;
 }
 
 .kbd {
   padding: 1px 6px;
-  border: 1px solid var(--hint-border);
+  border: 1px solid var(--border);
   border-bottom-width: 2px;
-  border-radius: 6px;
-  background: var(--hint-kbd-bg);
+  border-radius: var(--radius-sm);
+  background: var(--surface-sunken);
   font: inherit;
   font-size: 12px;
 }
 
 .plus {
-  color: var(--hint-muted);
+  color: var(--text-muted);
 }
 
-.action {
-  color: var(--hint-muted);
-}
-
-.toggle,
-.iconButton {
-  display: inline-grid;
-  place-items: center;
-  cursor: pointer;
-}
-
-.toggle {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-}
-
-.iconButton {
-  width: 24px;
-  height: 24px;
-  padding: 0;
-  border: none;
-  border-radius: 6px;
-  background: transparent;
-  color: var(--hint-muted);
-}
-
-.iconButton:hover {
-  background: var(--hint-kbd-bg);
-}
-
-.toggle:focus-visible,
-.iconButton:focus-visible {
-  outline: 2px solid #6366f1;
-  outline-offset: 2px;
+@media (max-width: 640px) {
+  .columns {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
 }

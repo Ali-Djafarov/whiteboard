@@ -1,41 +1,51 @@
-import { Fragment, useEffect, useMemo, useState } from "react";
+import { Fragment, useEffect, useId, useMemo, useRef, useState } from "react";
 import { HelpCircle, X } from "lucide-react";
 import { isTextEditingTarget } from "@/shared/lib/dom";
-import { getControls } from "../model/controls";
+import { getControlColumns, type ControlGroup } from "../model/controls";
 import styles from "./ControlsHint.module.css";
 
-const SEEN_KEY = "whiteboard:controls-hint-seen";
+function Group({ group }: { group: ControlGroup }) {
+  const titleId = useId();
 
-function readSeen(): boolean {
-  try {
-    return localStorage.getItem(SEEN_KEY) === "1";
-  } catch {
-    return false;
-  }
-}
-
-function markSeen(): void {
-  try {
-    localStorage.setItem(SEEN_KEY, "1");
-  } catch {
-    console.log("хранилище недоступно");
-  }
+  return (
+    <section aria-labelledby={titleId}>
+      <h3 id={titleId} className={styles.groupTitle}>
+        {group.title}
+      </h3>
+      <ul className={styles.list}>
+        {group.controls.map((control) => (
+          <li key={`${control.keys.join("+")}:${control.action}`} className={styles.row}>
+            <span className={styles.action}>{control.action}</span>
+            <span className={styles.keys}>
+              {control.keys.map((key, index) => (
+                <Fragment key={`${index}:${key}`}>
+                  {index > 0 && <span className={styles.plus}>+</span>}
+                  <kbd className={styles.kbd}>{key}</kbd>
+                </Fragment>
+              ))}
+            </span>
+          </li>
+        ))}
+      </ul>
+    </section>
+  );
 }
 
 export function ControlsHint() {
-  const [open, setOpen] = useState(() => !readSeen());
-  const controls = useMemo(() => getControls(), []);
+  const [open, setOpen] = useState(false);
+  const dialogRef = useRef<HTMLDialogElement>(null);
+  const titleId = useId();
+  const columns = useMemo(() => getControlColumns(), []);
 
   useEffect(() => {
-    if (!open) markSeen();
+    const dialog = dialogRef.current;
+    if (!dialog) return;
+    if (open && !dialog.open) dialog.showModal();
+    if (!open && dialog.open) dialog.close();
   }, [open]);
 
   useEffect(() => {
     const onKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "Escape") {
-        setOpen(false);
-        return;
-      }
       if (
         e.key === "?" &&
         !e.ctrlKey &&
@@ -43,6 +53,7 @@ export function ControlsHint() {
         !e.altKey &&
         !isTextEditingTarget(e.target)
       ) {
+        e.preventDefault();
         setOpen((value) => !value);
       }
     };
@@ -51,47 +62,56 @@ export function ControlsHint() {
   }, []);
 
   return (
-    <div className={styles.root}>
-      {open && (
-        <section className={styles.panel} aria-label="Управление холстом">
+    <>
+      <button
+        type="button"
+        className={styles.toggle}
+        onClick={() => setOpen(true)}
+        aria-haspopup="dialog"
+        aria-label="Справка по управлению"
+        title="Справка (?)"
+      >
+        <HelpCircle size={20} />
+      </button>
+
+      <dialog
+        ref={dialogRef}
+        className={styles.dialog}
+        aria-labelledby={titleId}
+        onClose={() => setOpen(false)}
+        onClick={(e) => {
+          if (e.target === e.currentTarget) setOpen(false);
+        }}
+      >
+        <div className={styles.content}>
           <header className={styles.header}>
-            <h2 className={styles.title}>Управление</h2>
+            <h2 id={titleId} className={styles.title}>
+              Справка
+            </h2>
             <button
               type="button"
               className={styles.iconButton}
               onClick={() => setOpen(false)}
-              aria-label="Закрыть подсказку"
+              aria-label="Закрыть справку"
             >
-              <X size={16} />
+              <X size={18} />
             </button>
           </header>
-          <ul className={styles.list}>
-            {controls.map((control) => (
-              <li key={control.keys.join("+")} className={styles.row}>
-                <span className={styles.keys}>
-                  {control.keys.map((key, index) => (
-                    <Fragment key={key}>
-                      {index > 0 && <span className={styles.plus}>+</span>}
-                      <kbd className={styles.kbd}>{key}</kbd>
-                    </Fragment>
-                  ))}
-                </span>
-                <span className={styles.action}>{control.action}</span>
-              </li>
-            ))}
-          </ul>
-        </section>
-      )}
-      <button
-        type="button"
-        className={styles.toggle}
-        onClick={() => setOpen((value) => !value)}
-        aria-expanded={open}
-        aria-label="Управление холстом"
-        title="Управление (?)"
-      >
-        <HelpCircle size={20} />
-      </button>
-    </div>
+
+          <div className={styles.columns}>
+            <div className={styles.column}>
+              {columns.left.map((group) => (
+                <Group key={group.id} group={group} />
+              ))}
+            </div>
+            <div className={styles.column}>
+              {columns.right.map((group) => (
+                <Group key={group.id} group={group} />
+              ))}
+            </div>
+          </div>
+        </div>
+      </dialog>
+    </>
   );
 }

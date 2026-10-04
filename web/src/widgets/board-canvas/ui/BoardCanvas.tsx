@@ -15,14 +15,17 @@ export function BoardCanvas() {
   const scene = useSceneStore((s) => s.scene);
   const draft = useToolStore((s) => s.draft);
   const activeTool = useToolStore((s) => s.activeTool);
+  const selectedIds = useToolStore((s) => s.selectedIds);
+  const marquee = useToolStore((s) => s.marquee);
 
   const pan = usePanZoom(containerRef);
   const tool = useToolPointer(containerRef, getViewport);
   useToolHotkeys();
 
   const draw = useCallback(
-    (ctx: CanvasRenderingContext2D) => renderScene(ctx, scene, viewport, draft),
-    [scene, viewport, draft],
+    (ctx: CanvasRenderingContext2D) =>
+      renderScene(ctx, scene, viewport, { draft, selectedIds, marquee }),
+    [scene, viewport, draft, selectedIds, marquee],
   );
 
   const onPointerDown = (e: React.PointerEvent<HTMLElement>) => {
@@ -41,12 +44,15 @@ export function BoardCanvas() {
   return (
     <div
       ref={containerRef}
-      className={activeTool === "select" ? undefined : styles.drawing}
+      className={
+        activeTool === "select"
+          ? styles.root
+          : `${styles.root} ${styles.drawing}`
+      }
       onPointerDown={onPointerDown}
       onPointerMove={onPointerMove}
       onPointerUp={onPointerUp}
       onPointerCancel={onPointerCancel}
-      style={{ height: "100%", touchAction: "none" }}
     >
       <Canvas draw={draw} />
     </div>
