@@ -1,4 +1,4 @@
-import type { Point } from "@/shared/canvas/geometry";
+import type { Point } from "@/shared/canvas";
 
 type ElementBase = { id: string; z: number };
 

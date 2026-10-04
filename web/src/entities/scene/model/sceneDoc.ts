@@ -1,6 +1,6 @@
 import * as Y from "yjs";
 import type { Scene, SceneElement } from "./types";
-import type { Point } from "@/shared/canvas/geometry";
+import type { Point } from "@/shared/canvas";
 
 export const LOCAL_ORIGIN = Symbol("local");
 

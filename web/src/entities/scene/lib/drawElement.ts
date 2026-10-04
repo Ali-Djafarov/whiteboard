@@ -1,6 +1,6 @@
-import { normalizeRect, type Point } from "@/shared/canvas/geometry";
+import { normalizeRect, type Point } from "@/shared/canvas";
 import { assertNever } from "@/shared/lib/assertNever";
-import type { SceneElement } from "../model/types";
+import type { NewElement } from "../model/sceneDoc";
 
 const ARROW_HEAD = 14;
 
@@ -26,7 +26,7 @@ function drawArrow(
 
 export function drawElement(
   ctx: CanvasRenderingContext2D,
-  element: SceneElement,
+  element: NewElement,
 ): void {
   switch (element.type) {
     case "rectangle": {
