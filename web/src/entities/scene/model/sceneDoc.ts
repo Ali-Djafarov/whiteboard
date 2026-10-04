@@ -117,10 +117,16 @@ export function createSceneDoc(doc: Y.Doc = new Y.Doc()) {
     doc.transact(() => elements.delete(id), LOCAL_ORIGIN);
   }
 
+  function removeMany(ids: readonly string[]): void {
+    doc.transact(() => {
+      for (const id of ids) elements.delete(id);
+    }, LOCAL_ORIGIN);
+  }
+
   function subscribe(listener: () => void): () => void {
     elements.observeDeep(listener);
     return () => elements.unobserveDeep(listener);
   }
 
-  return { doc, snapshot, add, update, remove, subscribe };
+  return { doc, snapshot, add, update, remove, removeMany, subscribe };
 }

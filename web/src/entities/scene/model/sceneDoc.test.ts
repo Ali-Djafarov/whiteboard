@@ -95,6 +95,42 @@ describe("sceneDoc", () => {
     });
   });
 
+  describe("removeMany", () => {
+    it("removes several elements and keeps the rest", () => {
+      const scene = createSceneDoc();
+      const first = scene.add(rect);
+      const second = scene.add(rect);
+      const third = scene.add(rect);
+
+      scene.removeMany([first, third]);
+
+      expect(ids(scene)).toEqual([second]);
+    });
+
+    it("notifies subscribers once for the whole batch", () => {
+      const scene = createSceneDoc();
+      const first = scene.add(rect);
+      const second = scene.add(rect);
+      scene.add(rect);
+
+      let calls = 0;
+      scene.subscribe(() => calls++);
+
+      scene.removeMany([first, second]);
+
+      expect(calls).toBe(1);
+    });
+
+    it("ignores unknown ids and an empty list", () => {
+      const scene = createSceneDoc();
+      scene.add(rect);
+
+      expect(() => scene.removeMany(["missing"])).not.toThrow();
+      expect(() => scene.removeMany([])).not.toThrow();
+      expect(scene.snapshot().elements).toHaveLength(1);
+    });
+  });
+
   describe("subscribe", () => {
     it("notifies once per transaction and stops after unsubscribe", () => {
       const scene = createSceneDoc();
