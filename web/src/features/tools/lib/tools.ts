@@ -1,24 +1,18 @@
 import { useToolStore } from "../model/toolStore";
 import type { Tool, ToolId } from "../model/types";
+import { createSelectTool } from "./selectTool";
 import { createShapeTool } from "./shapeTool";
 
-const idleTool: Tool = {
-  onPointerDown: () => false,
-  onPointerMove() {},
-  onPointerUp() {},
-  cancel() {},
-};
-
 export const tools: Record<ToolId, Tool> = {
-  select: idleTool,
+  select: createSelectTool(),
   rectangle: createShapeTool("rectangle"),
   ellipse: createShapeTool("ellipse"),
 };
 
 export function activateTool(id: ToolId): void {
-  const { activeTool, setActiveTool } = useToolStore.getState();
+  const { activeTool, setActiveTool, setSelection } = useToolStore.getState();
   if (activeTool === id) return;
-  // смена инструмента посреди жеста не должна оставлять черновик
-  tools[activeTool].cancel(); 
+  tools[activeTool].cancel();
+  if (id !== "select") setSelection([]); 
   setActiveTool(id);
 }

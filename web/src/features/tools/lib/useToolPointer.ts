@@ -18,6 +18,7 @@ export function useToolPointer(
     return {
       point: screenToWorld(getLocalPoint(e, el), viewport),
       zoom: viewport.zoom,
+      shiftKey: e.shiftKey
     };
   };
 

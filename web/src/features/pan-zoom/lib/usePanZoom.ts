@@ -1,6 +1,6 @@
 import { useEffect, useRef, type RefObject } from "react";
 import { useViewportStore } from "../model/viewportStore";
-import { isTextEditingTarget } from "@/shared/lib/dom";
+import { isModalOpen, isTextEditingTarget } from "@/shared/lib/dom";
 import { getLocalPoint } from "@/shared/canvas";
 
 export function usePanZoom(ref: RefObject<HTMLElement | null>) {
@@ -28,7 +28,8 @@ export function usePanZoom(ref: RefObject<HTMLElement | null>) {
     };
 
     const onKeyDown = (e: KeyboardEvent) => {
-      if (e.code !== "Space" || isTextEditingTarget(e.target)) return;
+      if (e.code !== "Space" || isTextEditingTarget(e.target) || isModalOpen())
+        return;
       e.preventDefault();
       spaceDown.current = true;
       if (!dragging.current) el.style.cursor = "grab";
