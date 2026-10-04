@@ -2,7 +2,7 @@ import * as Y from "yjs";
 import { WebsocketProvider } from "y-websocket";
 import "./App.css";
 
-import { BoardPage } from "@/pages/board/ui/BoardPage";
+import { BoardPage } from "@/pages/board";
 
 const doc = new Y.Doc();
 const provider = new WebsocketProvider(
