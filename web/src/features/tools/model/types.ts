@@ -9,4 +9,5 @@ export type Tool = {
   onPointerMove(ctx: ToolContext): void;
   onPointerUp(ctx: ToolContext): void;
   cancel(): boolean;
+  isMoveTarget(ctx: ToolContext): boolean;
 };

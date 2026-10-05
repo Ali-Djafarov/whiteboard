@@ -52,11 +52,13 @@ export function BoardCanvas() {
   return (
     <div
       ref={containerRef}
-      className={
-        activeTool === "select"
-          ? styles.root
-          : `${styles.root} ${styles.drawing}`
-      }
+      className={[
+        styles.root,
+        activeTool !== "select" && styles.drawing,
+        tool.isMoveTarget && styles.move,
+      ]
+        .filter(Boolean)
+        .join(" ")}
       onPointerDown={onPointerDown}
       onPointerMove={onPointerMove}
       onPointerUp={onPointerUp}

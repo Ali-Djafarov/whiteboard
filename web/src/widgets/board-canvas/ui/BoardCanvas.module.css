@@ -6,3 +6,7 @@
 .drawing {
   cursor: crosshair;
 }
+
+.move {
+  cursor: move;
+}
