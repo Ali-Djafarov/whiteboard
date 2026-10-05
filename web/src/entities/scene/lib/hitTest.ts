@@ -83,3 +83,104 @@ export function elementsInRect(scene: Scene, rect: Rect): SceneElement[] {
     rectContainsRect(rect, getBounds(element)),
   );
 }
+
+export function hitTestMoveElement(
+  element: SceneElement,
+  point: Point,
+  tolerance: number,
+): boolean {
+  switch (element.type) {
+    case "rectangle": {
+      const rect = normalizeRect(element);
+
+      return pointInRect(point, inflateRect(rect, tolerance));
+    }
+
+    case "ellipse": {
+      const rect = normalizeRect(element);
+
+      const a = rect.width / 2;
+      const b = rect.height / 2;
+
+      if (a <= 0 || b <= 0) {
+        return pointInRect(point, inflateRect(rect, tolerance));
+      }
+
+      const centerX = rect.x + a;
+      const centerY = rect.y + b;
+
+      const d = Math.hypot((point.x - centerX) / a, (point.y - centerY) / b);
+
+      return d <= 1 + tolerance / Math.min(a, b);
+    }
+
+    case "arrow":
+      return distanceToSegment(point, element.start, element.end) <= tolerance;
+
+    case "text":
+      return pointInRect(point, inflateRect(getBounds(element), tolerance));
+
+    case "free-draw": {
+      const absolute = element.points.map((p) => ({
+        x: element.x + p.x,
+        y: element.y + p.y,
+      }));
+
+      const [first] = absolute;
+
+      if (!first) return false;
+
+      if (absolute.length === 1) {
+        return distanceToSegment(point, first, first) <= tolerance;
+      }
+
+      return absolute.some(
+        (p, i) =>
+          i > 0 &&
+          distanceToSegment(point, absolute[i - 1] ?? p, p) <= tolerance,
+      );
+    }
+
+    default:
+      return assertNever(element);
+  }
+}
+
+export function hitTestMoveScene(
+  scene: Scene,
+  point: Point,
+  tolerance: number,
+  selectedIds: readonly string[],
+): SceneElement | null {
+  const selected = new Set(selectedIds);
+
+  for (let i = scene.elements.length - 1; i >= 0; i--) {
+    const element = scene.elements[i];
+
+    if (!element || !selected.has(element.id)) {
+      continue;
+    }
+
+    if (hitTestMoveElement(element, point, tolerance)) {
+      return element;
+    }
+  }
+
+  return null;
+}
+
+export function hitTestAnyElement(
+  scene: Scene,
+  point: Point,
+  tolerance: number,
+): SceneElement | null {
+  for (let i = scene.elements.length - 1; i >= 0; i--) {
+    const element = scene.elements[i];
+
+    if (element && hitTestMoveElement(element, point, tolerance)) {
+      return element;
+    }
+  }
+
+  return null;
+}

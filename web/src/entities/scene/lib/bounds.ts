@@ -40,10 +40,39 @@ export function getBounds(element: SceneElement): Rect {
       const ys = element.points.map((p) => element.y + p.y);
       const minX = Math.min(...xs);
       const minY = Math.min(...ys);
-      return { x: minX, y: minY, width: Math.max(...xs) - minX, height: Math.max(...ys) - minY };
+      return {
+        x: minX,
+        y: minY,
+        width: Math.max(...xs) - minX,
+        height: Math.max(...ys) - minY,
+      };
     }
 
     default:
       return assertNever(element);
   }
+}
+
+export function getSelectionBounds(
+  elements: readonly SceneElement[],
+): Rect | null {
+  if (elements.length === 0) {
+    return null;
+  }
+
+  const bounds = elements.map(getBounds);
+
+  const minX = Math.min(...bounds.map((rect) => rect.x));
+  const minY = Math.min(...bounds.map((rect) => rect.y));
+
+  const maxX = Math.max(...bounds.map((rect) => rect.x + rect.width));
+
+  const maxY = Math.max(...bounds.map((rect) => rect.y + rect.height));
+
+  return {
+    x: minX,
+    y: minY,
+    width: maxX - minX,
+    height: maxY - minY,
+  };
 }
