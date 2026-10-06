@@ -1,13 +1,21 @@
 import { drawGrid, type Rect, type Viewport } from "@/shared/canvas";
 import type { Scene } from "../model/types";
-import type { NewElement } from "../model/sceneDoc";
+import type { ElementPatch, NewElement } from "../model/sceneDoc";
 import { drawElement } from "./drawElement";
-import { drawMarquee, drawSelection } from "./drawSelection";
+import {
+  drawArrowHandles,
+  drawHandles,
+  drawMarquee,
+  drawSelection,
+} from "./drawSelection";
+import { applyPatch } from "./patch";
+import { getSelectionBounds } from "./bounds";
 
 export type RenderOverlay = {
   draft?: NewElement | null;
   selectedIds?: readonly string[];
   marquee?: Rect | null;
+  preview?: Readonly<Record<string, ElementPatch>>;
   isGridVisible?: boolean;
 };
 
@@ -16,20 +24,30 @@ export function renderScene(
   scene: Scene,
   viewport: Viewport,
   overlay: RenderOverlay = {},
-  isGridVisible = true,
 ): void {
-  const { draft, selectedIds, marquee } = overlay;
+  const {
+    draft,
+    selectedIds,
+    marquee,
+    preview,
+    isGridVisible = true,
+  } = overlay;
+  const elements =
+    preview && Object.keys(preview).length > 0
+      ? scene.elements.map((element) => {
+          const patch = preview[element.id];
+          return patch ? applyPatch(element, patch) : element;
+        })
+      : scene.elements;
 
   ctx.save();
 
-  if (isGridVisible) {
-    drawGrid(ctx, viewport);
-  }
+  if (isGridVisible) drawGrid(ctx, viewport);
 
   ctx.translate(viewport.offsetX, viewport.offsetY);
   ctx.scale(viewport.zoom, viewport.zoom);
 
-  for (const element of scene.elements) drawElement(ctx, element);
+  for (const element of elements) drawElement(ctx, element);
 
   if (draft) {
     ctx.save();
@@ -40,11 +58,18 @@ export function renderScene(
 
   if (selectedIds && selectedIds.length > 0) {
     const selected = new Set(selectedIds);
-    drawSelection(
-      ctx,
-      scene.elements.filter((e) => selected.has(e.id)),
-      viewport.zoom,
+    const selectedElements = elements.filter((element) =>
+      selected.has(element.id),
     );
+    const [only] = selectedElements;
+
+    if (selectedElements.length === 1 && only?.type === "arrow") {
+      drawArrowHandles(ctx, only, viewport.zoom);
+    } else {
+      drawSelection(ctx, selectedElements, viewport.zoom);
+      const groupBounds = getSelectionBounds(selectedElements);
+      if (groupBounds) drawHandles(ctx, groupBounds, viewport.zoom);
+    }
   }
 
   if (marquee) drawMarquee(ctx, marquee, viewport.zoom);
