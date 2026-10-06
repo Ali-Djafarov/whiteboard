@@ -1,4 +1,4 @@
-import { useState, type RefObject } from "react";
+import { type RefObject } from "react";
 import { getLocalPoint } from "@/shared/canvas";
 import { screenToWorld, type Viewport } from "@/shared/canvas";
 import { useToolStore } from "../model/toolStore";
@@ -11,7 +11,6 @@ export function useToolPointer(
   ref: RefObject<HTMLElement | null>,
   getViewport: () => Viewport,
 ) {
-  const [isMoveTarget, setIsMoveTarget] = useState(false);
   const toContext = (e: PointerEvent): ToolContext | null => {
     const el = ref.current;
     if (!el) return null;
@@ -35,11 +34,7 @@ export function useToolPointer(
 
   const onPointerMove = (e: PointerEvent) => {
     const ctx = toContext(e);
-    if (!ctx) return;
-    if (useToolStore.getState().activeTool === "select") {
-      setIsMoveTarget(activeTool().isMoveTarget(ctx));
-    }
-    activeTool().onPointerMove(ctx);
+    if (ctx) activeTool().onPointerMove(ctx);
   };
 
   const onPointerUp = (e: PointerEvent) => {
@@ -58,6 +53,5 @@ export function useToolPointer(
     onPointerMove,
     onPointerUp,
     onPointerCancel,
-    isMoveTarget,
   };
 }

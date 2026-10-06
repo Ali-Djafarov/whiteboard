@@ -19,6 +19,8 @@ export function BoardCanvas() {
   const selectedIds = useToolStore((s) => s.selectedIds);
   const marquee = useToolStore((s) => s.marquee);
   const isGridVisible = useGridStore((s) => s.isVisible);
+  const preview = useToolStore((s) => s.preview);
+  const cursor = useToolStore((s) => s.cursor);
 
   const pan = usePanZoom(containerRef);
   const tool = useToolPointer(containerRef, getViewport);
@@ -26,14 +28,14 @@ export function BoardCanvas() {
 
   const draw = useCallback(
     (ctx: CanvasRenderingContext2D) =>
-      renderScene(
-        ctx,
-        scene,
-        viewport,
-        { draft, selectedIds, marquee },
+      renderScene(ctx, scene, viewport, {
+        draft,
+        selectedIds,
+        marquee,
+        preview,
         isGridVisible,
-      ),
-    [scene, viewport, draft, selectedIds, marquee, isGridVisible],
+      }),
+    [scene, viewport, draft, selectedIds, marquee, preview, isGridVisible],
   );
 
   const onPointerDown = (e: React.PointerEvent<HTMLElement>) => {
@@ -52,13 +54,12 @@ export function BoardCanvas() {
   return (
     <div
       ref={containerRef}
-      className={[
-        styles.root,
-        activeTool !== "select" && styles.drawing,
-        tool.isMoveTarget && styles.move,
-      ]
-        .filter(Boolean)
-        .join(" ")}
+      data-cursor={cursor ?? undefined}
+      className={
+        activeTool === "select"
+          ? styles.root
+          : `${styles.root} ${styles.drawing}`
+      }
       onPointerDown={onPointerDown}
       onPointerMove={onPointerMove}
       onPointerUp={onPointerUp}

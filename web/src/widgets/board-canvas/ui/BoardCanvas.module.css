@@ -7,6 +7,26 @@
   cursor: crosshair;
 }
 
-.move {
+.root[data-cursor="move"] {
   cursor: move;
+}
+
+.root[data-cursor="ns-resize"] {
+  cursor: ns-resize;
+}
+
+.root[data-cursor="ew-resize"] {
+  cursor: ew-resize;
+}
+
+.root[data-cursor="nwse-resize"] {
+  cursor: nwse-resize;
+}
+
+.root[data-cursor="nesw-resize"] {
+  cursor: nesw-resize;
+}
+
+.root[data-cursor="crosshair"] {
+  cursor: crosshair;
 }
