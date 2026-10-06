@@ -49,3 +49,21 @@ export function normalizeRect(r: Rect): Rect {
     height: Math.abs(r.height),
   };
 }
+
+export function snapAngle(
+  origin: Point,
+  point: Point,
+  stepDegrees: number,
+): Point {
+  const dx = point.x - origin.x;
+  const dy = point.y - origin.y;
+  const length = Math.hypot(dx, dy);
+  if (length === 0) return point;
+
+  const step = (stepDegrees * Math.PI) / 180;
+  const angle = Math.round(Math.atan2(dy, dx) / step) * step;
+  return {
+    x: origin.x + Math.cos(angle) * length,
+    y: origin.y + Math.sin(angle) * length,
+  };
+}

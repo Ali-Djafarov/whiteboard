@@ -9,6 +9,7 @@ const KEY_TO_TOOL: Record<string, ToolId> = {
   KeyV: "select",
   KeyR: "rectangle",
   KeyO: "ellipse",
+  KeyA: "arrow",
 };
 
 export function useToolHotkeys(): void {

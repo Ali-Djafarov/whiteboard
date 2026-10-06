@@ -1,4 +1,10 @@
-import { Circle, MousePointer2, Grid2X2, Square } from "lucide-react";
+import {
+  ArrowUpRight,
+  Circle,
+  MousePointer2,
+  Grid2X2,
+  Square,
+} from "lucide-react";
 import { activateTool, useToolStore, type ToolId } from "@/features/tools";
 import styles from "./Toolbar.module.css";
 import { useGridStore } from "@/features/grid";
@@ -6,6 +12,7 @@ const ITEMS = [
   { id: "select", label: "Выбор", hotkey: "V", Icon: MousePointer2 },
   { id: "rectangle", label: "Прямоугольник", hotkey: "R", Icon: Square },
   { id: "ellipse", label: "Эллипс", hotkey: "O", Icon: Circle },
+  { id: "arrow", label: "Стрелка", hotkey: "A", Icon: ArrowUpRight },
 ] satisfies {
   id: ToolId;
   label: string;

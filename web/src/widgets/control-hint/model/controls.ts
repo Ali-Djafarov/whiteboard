@@ -64,6 +64,11 @@ export function getControlColumns(
             keys: ["Перетаскивание"],
             action: "Нарисовать фигуру (после R или O)",
           },
+          { keys: ["A"], action: "Стрелка" },
+          {
+            keys: ["Shift", "Перетаскивание"],
+            action: "Стрелка под углом, кратным 15°",
+          },
         ],
       },
     ],

@@ -1,6 +1,6 @@
 import type { Point } from "@/shared/canvas";
 
-export type ToolId = "select" | "rectangle" | "ellipse";
+export type ToolId = "select" | "rectangle" | "ellipse" | "arrow";
 
 export type ToolContext = { point: Point; zoom: number; shiftKey: boolean };
 
@@ -9,5 +9,4 @@ export type Tool = {
   onPointerMove(ctx: ToolContext): void;
   onPointerUp(ctx: ToolContext): void;
   cancel(): boolean;
-  isMoveTarget(ctx: ToolContext): boolean;
 };
