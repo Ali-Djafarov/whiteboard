@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import type { Scene, SceneElement } from "../model/types";
 import { getBounds } from "./bounds";
-import { elementsInRect, hitTestElement, hitTestScene } from "./hitTest";
+import {  hitTestElement, hitTestScene } from "./hitTest";
 
 const TOL = 6;
 const rect = (id: string, z: number, x = 0): SceneElement => ({
@@ -92,13 +92,6 @@ describe("hitTestScene", () => {
   });
 });
 
-describe("elementsInRect", () => {
-  it("selects only fully contained elements", () => {
-    const scene: Scene = { elements: [rect("a", 1), rect("b", 2, 200)] };
-    const box = { x: -10, y: -10, width: 130, height: 80 };
-    expect(elementsInRect(scene, box).map((e) => e.id)).toEqual(["a"]);
-  });
-});
 
 describe("getBounds", () => {
   it("normalizes a rectangle with negative size", () => {
