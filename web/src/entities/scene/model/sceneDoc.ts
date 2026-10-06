@@ -103,14 +103,21 @@ export function createSceneDoc(doc: Y.Doc = new Y.Doc()) {
     return id;
   }
 
-  function update(id: string, patch: ElementPatch): void {
-    const map = elements.get(id);
-    if (!map) return;
+  function updateMany(patches: Readonly<Record<string, ElementPatch>>): void {
     doc.transact(() => {
-      for (const [key, value] of Object.entries(patch)) {
-        if (value !== undefined) map.set(key, value);
+      for (const [id, patch] of Object.entries(patches)) {
+        const map = elements.get(id);
+        if (!map) continue;
+        for (const [key, value] of Object.entries(patch)) {
+          if (value !== undefined && map.get(key) !== value)
+            map.set(key, value);
+        }
       }
     }, LOCAL_ORIGIN);
+  }
+
+  function update(id: string, patch: ElementPatch): void {
+    updateMany({ [id]: patch });
   }
 
   function remove(id: string): void {
@@ -128,5 +135,14 @@ export function createSceneDoc(doc: Y.Doc = new Y.Doc()) {
     return () => elements.unobserveDeep(listener);
   }
 
-  return { doc, snapshot, add, update, remove, removeMany, subscribe };
+  return {
+    doc,
+    snapshot,
+    add,
+    update,
+    updateMany,
+    remove,
+    removeMany,
+    subscribe,
+  };
 }
