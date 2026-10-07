@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import type { NewElement } from "@/entities/scene";
+import { useSceneStore, type NewElement } from "@/entities/scene";
 import type { TextEditorState, ToolId } from "./types";
 import type { Rect } from "@/shared/canvas";
 import type { ElementPatch } from "@/entities/scene/model/sceneDoc";
@@ -51,3 +51,10 @@ export const useToolStore = create<ToolState>((set, get) => ({
     if (editor) set({ textEditor: { ...editor, text } });
   },
 }));
+
+useSceneStore.subscribe((state) => {
+  const { selectedIds, setSelection } = useToolStore.getState();
+  if (selectedIds.length === 0) return;
+  const existing = new Set(state.scene.elements.map((element) => element.id));
+  setSelection(selectedIds.filter((id) => existing.has(id)));
+});

@@ -10,16 +10,36 @@ const KEY_TO_TOOL: Record<string, ToolId> = {
   KeyR: "rectangle",
   KeyO: "ellipse",
   KeyA: "arrow",
-  KeyP: "free-draw",
+  KeyP: "pen",
   KeyT: "text",
 };
+
+const isGestureActive = (): boolean => {
+  const { draft, marquee, preview } = useToolStore.getState();
+  return draft !== null || marquee !== null || Object.keys(preview).length > 0;
+};
+
+function handleHistoryKey(e: KeyboardEvent): void {
+  const isUndo = e.code === "KeyZ" && !e.shiftKey;
+  const isRedo = (e.code === "KeyZ" && e.shiftKey) || e.code === "KeyY";
+  if (!isUndo && !isRedo) return;
+
+  e.preventDefault();
+  if (isGestureActive()) return;
+  if (isUndo) sceneApi.undo();
+  else sceneApi.redo();
+}
 
 export function useToolHotkeys(): void {
   useEffect(() => {
     const onKeyDown = (e: KeyboardEvent) => {
-      if (isModalOpen()) return;
-      if (e.ctrlKey || e.metaKey || e.altKey || isTextEditingTarget(e.target))
+      if (isModalOpen() || isTextEditingTarget(e.target) || e.altKey) return;
+
+      if (e.ctrlKey || e.metaKey) {
+        handleHistoryKey(e);
         return;
+      }
+      
       const { activeTool, selectedIds, setSelection } = useToolStore.getState();
 
       if (e.code === "Escape") {
