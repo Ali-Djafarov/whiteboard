@@ -4,6 +4,7 @@ import { screenToWorld, type Viewport } from "@/shared/canvas";
 import { useToolStore } from "../model/toolStore";
 import type { ToolContext } from "../model/types";
 import { tools } from "./tools";
+import { beginTextEditing } from "./textEditing";
 
 type PointerEvent = React.PointerEvent<HTMLElement>;
 
@@ -48,10 +49,19 @@ export function useToolPointer(
 
   const onPointerCancel = () => activeTool().cancel();
 
+  const onDoubleClick = (e: React.MouseEvent<HTMLElement>) => {
+    if (useToolStore.getState().activeTool !== "select") return;
+    const el = ref.current;
+    if (!el) return;
+    const viewport = getViewport();
+    const point = screenToWorld(getLocalPoint(e, el), viewport);
+    beginTextEditing(point, viewport.zoom, { createOverShapes: false });
+  };
   return {
     onPointerDown,
     onPointerMove,
     onPointerUp,
     onPointerCancel,
+    onDoubleClick,
   };
 }

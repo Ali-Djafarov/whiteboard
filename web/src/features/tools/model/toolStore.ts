@@ -1,6 +1,6 @@
 import { create } from "zustand";
 import type { NewElement } from "@/entities/scene";
-import type { ToolId } from "./types";
+import type { TextEditorState, ToolId } from "./types";
 import type { Rect } from "@/shared/canvas";
 import type { ElementPatch } from "@/entities/scene/model/sceneDoc";
 
@@ -19,6 +19,9 @@ type ToolState = {
   setMarquee: (rect: Rect | null) => void;
   setPreview: (preview: Preview) => void;
   setCursor: (cursor: string | null) => void;
+  textEditor: TextEditorState | null;
+  setTextEditor: (editor: TextEditorState | null) => void;
+  setTextEditorValue: (text: string) => void;
 };
 
 const sameIds = (a: readonly string[], b: readonly string[]) =>
@@ -40,5 +43,11 @@ export const useToolStore = create<ToolState>((set, get) => ({
   setPreview: (preview) => set({ preview }),
   setCursor: (cursor) => {
     if (get().cursor !== cursor) set({ cursor });
+  },
+  textEditor: null,
+  setTextEditor: (textEditor) => set({ textEditor }),
+  setTextEditorValue: (text) => {
+    const editor = get().textEditor;
+    if (editor) set({ textEditor: { ...editor, text } });
   },
 }));

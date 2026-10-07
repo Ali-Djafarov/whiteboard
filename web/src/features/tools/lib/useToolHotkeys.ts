@@ -10,6 +10,8 @@ const KEY_TO_TOOL: Record<string, ToolId> = {
   KeyR: "rectangle",
   KeyO: "ellipse",
   KeyA: "arrow",
+  KeyP: "free-draw",
+  KeyT: "text",
 };
 
 export function useToolHotkeys(): void {
