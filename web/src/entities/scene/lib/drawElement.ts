@@ -1,6 +1,8 @@
 import { normalizeRect, type Point } from "@/shared/canvas";
 import { assertNever } from "@/shared/lib/assertNever";
 import type { NewElement } from "../model/sceneDoc";
+import { textFont } from "./textMetrics";
+import { TEXT_LINE_HEIGHT } from "./bounds";
 
 const ARROW_HEAD = 14;
 
@@ -54,25 +56,43 @@ export function drawElement(
       break;
     case "text": {
       ctx.save();
-      ctx.font = `${element.fontSize}px system-ui, sans-serif`;
+      ctx.font = textFont(element.fontSize);
+      ctx.fillStyle = "#000000";
       ctx.textBaseline = "top";
       element.text.split("\n").forEach((line, i) => {
-        ctx.fillText(line, element.x, element.y + i * element.fontSize * 1.2);
+        ctx.fillText(
+          line,
+          element.x,
+          element.y + i * element.fontSize * TEXT_LINE_HEIGHT,
+        );
       });
       ctx.restore();
       break;
     }
     case "free-draw": {
-      const [first, ...rest] = element.points;
+      const points = element.points.map((p) => ({
+        x: element.x + p.x,
+        y: element.y + p.y,
+      }));
+      const [first] = points;
       if (!first) break;
+
       ctx.save();
       ctx.lineJoin = "round";
       ctx.lineCap = "round";
       ctx.beginPath();
-      ctx.moveTo(element.x + first.x, element.y + first.y);
-      if (rest.length === 0)
-        ctx.lineTo(element.x + first.x, element.y + first.y);
-      for (const p of rest) ctx.lineTo(element.x + p.x, element.y + p.y);
+      ctx.moveTo(first.x, first.y);
+      if (points.length === 1) ctx.lineTo(first.x, first.y);
+
+      for (let i = 1; i < points.length - 1; i++) {
+        const p = points[i];
+        const next = points[i + 1];
+        if (!p || !next) continue;
+        ctx.quadraticCurveTo(p.x, p.y, (p.x + next.x) / 2, (p.y + next.y) / 2);
+      }
+      const last = points[points.length - 1];
+      if (last && points.length > 1) ctx.lineTo(last.x, last.y);
+
       ctx.stroke();
       ctx.restore();
       break;

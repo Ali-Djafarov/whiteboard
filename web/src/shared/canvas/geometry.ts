@@ -67,3 +67,43 @@ export function snapAngle(
     y: origin.y + Math.sin(angle) * length,
   };
 }
+
+export function simplifyPolyline(
+  points: readonly Point[],
+  tolerance: number,
+): Point[] {
+  if (points.length <= 2) return [...points];
+
+  const keep = new Array<boolean>(points.length).fill(false);
+  keep[0] = true;
+  keep[points.length - 1] = true;
+
+  const stack: Array<[number, number]> = [[0, points.length - 1]];
+  while (stack.length > 0) {
+    const range = stack.pop();
+    if (!range) break;
+    const [first, last] = range;
+    const a = points[first];
+    const b = points[last];
+    if (!a || !b) continue;
+
+    let maxDistance = 0;
+    let index = -1;
+    for (let i = first + 1; i < last; i++) {
+      const p = points[i];
+      if (!p) continue;
+      const distance = distanceToSegment(p, a, b);
+      if (distance > maxDistance) {
+        maxDistance = distance;
+        index = i;
+      }
+    }
+
+    if (index !== -1 && maxDistance > tolerance) {
+      keep[index] = true;
+      stack.push([first, index], [index, last]);
+    }
+  }
+
+  return points.filter((_, i) => keep[i]);
+}

@@ -19,6 +19,7 @@ export {
   rectContainsRect,
   distanceToSegment,
   snapAngle,
+  simplifyPolyline,
 } from "./geometry";
 export type { Point, Rect } from "./geometry";
 export { drawGrid } from "./grid";

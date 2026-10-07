@@ -17,6 +17,7 @@ export type RenderOverlay = {
   marquee?: Rect | null;
   preview?: Readonly<Record<string, ElementPatch>>;
   isGridVisible?: boolean;
+  hiddenId?: string | null;
 };
 
 export function renderScene(
@@ -30,6 +31,7 @@ export function renderScene(
     selectedIds,
     marquee,
     preview,
+    hiddenId,
     isGridVisible = true,
   } = overlay;
   const elements =
@@ -40,6 +42,10 @@ export function renderScene(
         })
       : scene.elements;
 
+  const visible = hiddenId
+    ? elements.filter((element) => element.id !== hiddenId)
+    : elements;
+
   ctx.save();
 
   if (isGridVisible) drawGrid(ctx, viewport);
@@ -47,7 +53,7 @@ export function renderScene(
   ctx.translate(viewport.offsetX, viewport.offsetY);
   ctx.scale(viewport.zoom, viewport.zoom);
 
-  for (const element of elements) drawElement(ctx, element);
+  for (const element of visible) drawElement(ctx, element);
 
   if (draft) {
     ctx.save();
