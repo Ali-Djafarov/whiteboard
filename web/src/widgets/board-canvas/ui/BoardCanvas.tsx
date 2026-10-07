@@ -7,6 +7,7 @@ import styles from "./BoardCanvas.module.css";
 
 import { useToolHotkeys, useToolPointer, useToolStore } from "@/features/tools";
 import { useGridStore } from "@/features/grid";
+import { TextEditorOverlay } from "./TextEditorOverlay";
 
 const getViewport = () => useViewportStore.getState().viewport;
 
@@ -21,6 +22,7 @@ export function BoardCanvas() {
   const isGridVisible = useGridStore((s) => s.isVisible);
   const preview = useToolStore((s) => s.preview);
   const cursor = useToolStore((s) => s.cursor);
+  const editingId = useToolStore((s) => s.textEditor?.id ?? null);
 
   const pan = usePanZoom(containerRef);
   const tool = useToolPointer(containerRef, getViewport);
@@ -33,9 +35,19 @@ export function BoardCanvas() {
         selectedIds,
         marquee,
         preview,
+        hiddenId: editingId,
         isGridVisible,
       }),
-    [scene, viewport, draft, selectedIds, marquee, preview, isGridVisible],
+    [
+      scene,
+      viewport,
+      draft,
+      selectedIds,
+      marquee,
+      preview,
+      editingId,
+      isGridVisible,
+    ],
   );
 
   const onPointerDown = (e: React.PointerEvent<HTMLElement>) => {
@@ -55,17 +67,21 @@ export function BoardCanvas() {
     <div
       ref={containerRef}
       data-cursor={cursor ?? undefined}
-      className={
-        activeTool === "select"
-          ? styles.root
-          : `${styles.root} ${styles.drawing}`
-      }
+      className={[
+        styles.root,
+        activeTool !== "select" && styles.drawing,
+        activeTool === "text" && styles.text,
+      ]
+        .filter(Boolean)
+        .join(" ")}
       onPointerDown={onPointerDown}
       onPointerMove={onPointerMove}
       onPointerUp={onPointerUp}
       onPointerCancel={onPointerCancel}
+      onDoubleClick={tool.onDoubleClick}
     >
       <Canvas draw={draw} />
+      <TextEditorOverlay />
     </div>
   );
 }

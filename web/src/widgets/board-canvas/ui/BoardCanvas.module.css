@@ -1,4 +1,6 @@
 .root {
+  position: relative;
+  overflow: hidden;
   height: 100%;
   touch-action: none;
 }
@@ -29,4 +31,24 @@
 
 .root[data-cursor="crosshair"] {
   cursor: crosshair;
+}
+
+.text {
+  cursor: text;
+}
+
+.textEditor {
+  position: absolute;
+  z-index: 5;
+  box-sizing: content-box;
+  margin: 0;
+  padding: 0;
+  border: none;
+  outline: 1px dashed var(--accent);
+  outline-offset: 2px;
+  background: transparent;
+  color: #000000;
+  white-space: pre;
+  overflow: hidden;
+  resize: none;
 }
