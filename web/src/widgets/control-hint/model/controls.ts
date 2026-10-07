@@ -51,6 +51,8 @@ export function getControlColumns(
           { keys: ["?"], action: "Показать или скрыть справку" },
           { keys: ["Двойной клик"], action: "Править текст или создать новый" },
           { keys: ["Esc"], action: "Закончить ввод текста" },
+          { keys: [mod, "Z"], action: "Отменить" },
+          { keys: [mod, "Shift", "Z"], action: "Повторить" },
         ],
       },
     ],

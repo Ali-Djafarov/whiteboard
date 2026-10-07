@@ -6,10 +6,13 @@ import {
   Square,
   Pencil,
   Type,
+  Undo2,
+  Redo2,
 } from "lucide-react";
 import { activateTool, useToolStore, type ToolId } from "@/features/tools";
 import styles from "./Toolbar.module.css";
 import { useGridStore } from "@/features/grid";
+import { sceneApi, useHistoryStore } from "@/entities/scene";
 const ITEMS = [
   { id: "select", label: "Выбор", hotkey: "V", Icon: MousePointer2 },
   { id: "rectangle", label: "Прямоугольник", hotkey: "R", Icon: Square },
@@ -28,6 +31,8 @@ export function Toolbar() {
   const activeTool = useToolStore((s) => s.activeTool);
   const isGridVisible = useGridStore((s) => s.isVisible);
   const toggleGrid = useGridStore((s) => s.toggleGrid);
+  const canUndo = useHistoryStore((s) => s.canUndo);
+  const canRedo = useHistoryStore((s) => s.canRedo);
 
   return (
     <div className={styles.root} role="toolbar" aria-label="Инструменты">
@@ -44,6 +49,31 @@ export function Toolbar() {
           <Icon size={18} />
         </button>
       ))}
+      <span
+        className={styles.divider}
+        role="separator"
+        aria-orientation="vertical"
+      />
+      <button
+        type="button"
+        className={styles.button}
+        disabled={!canUndo}
+        onClick={() => sceneApi.undo()}
+        aria-label="Отменить"
+        title="Отменить (Ctrl/⌘ + Z)"
+      >
+        <Undo2 size={18} />
+      </button>
+      <button
+        type="button"
+        className={styles.button}
+        disabled={!canRedo}
+        onClick={() => sceneApi.redo()}
+        aria-label="Повторить"
+        title="Повторить (Ctrl/⌘ + Shift + Z)"
+      >
+        <Redo2 size={18} />
+      </button>
       <button
         type="button"
         className={styles.button}

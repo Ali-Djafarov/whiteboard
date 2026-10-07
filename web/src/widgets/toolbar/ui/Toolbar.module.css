@@ -26,8 +26,13 @@
   cursor: pointer;
 }
 
-.button:hover {
+.button:hover:not(:disabled) {
   background: var(--surface-hover);
+}
+
+.button:disabled {
+  opacity: 0.4;
+  cursor: default;
 }
 
 .button[aria-pressed="true"] {
@@ -38,4 +43,11 @@
 .button:focus-visible {
   outline: 2px solid var(--accent);
   outline-offset: 2px;
+}
+
+.divider {
+  align-self: stretch;
+  width: 1px;
+  margin: 6px 2px;
+  background: var(--border);
 }
