@@ -4,6 +4,8 @@ import {
   MousePointer2,
   Grid2X2,
   Square,
+  Pencil,
+  Type,
 } from "lucide-react";
 import { activateTool, useToolStore, type ToolId } from "@/features/tools";
 import styles from "./Toolbar.module.css";
@@ -13,6 +15,8 @@ const ITEMS = [
   { id: "rectangle", label: "Прямоугольник", hotkey: "R", Icon: Square },
   { id: "ellipse", label: "Эллипс", hotkey: "O", Icon: Circle },
   { id: "arrow", label: "Стрелка", hotkey: "A", Icon: ArrowUpRight },
+  { id: "pen", label: "Карандаш", hotkey: "P", Icon: Pencil },
+  { id: "text", label: "Текст", hotkey: "T", Icon: Type },
 ] satisfies {
   id: ToolId;
   label: string;

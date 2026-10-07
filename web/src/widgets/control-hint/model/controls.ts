@@ -49,6 +49,8 @@ export function getControlColumns(
           { keys: ["Delete"], action: "Удалить выделенное" },
           { keys: ["Esc"], action: "Отменить действие или снять выделение" },
           { keys: ["?"], action: "Показать или скрыть справку" },
+          { keys: ["Двойной клик"], action: "Править текст или создать новый" },
+          { keys: ["Esc"], action: "Закончить ввод текста" },
         ],
       },
     ],
@@ -68,6 +70,12 @@ export function getControlColumns(
           {
             keys: ["Shift", "Перетаскивание"],
             action: "Стрелка под углом, кратным 15°",
+          },
+          { keys: ["P"], action: "Карандаш" },
+          { keys: ["T"], action: "Текст" },
+          {
+            keys: ["Клик"],
+            action: "Текст: поставить или править (инструмент T)",
           },
         ],
       },
