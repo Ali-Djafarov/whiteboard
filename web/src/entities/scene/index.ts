@@ -21,3 +21,4 @@ export { LOCAL_ORIGIN } from "./model/sceneDoc";
 export type { ArrowElement, Scene, SceneElement } from "./model/types";
 export { rectTransform, scaleElementPatch } from "./lib/scale";
 export { measureTextWidth, TEXT_FONT_FAMILY } from "./lib/textMetrics";
+export { useHistoryStore } from "./model/historyStore";

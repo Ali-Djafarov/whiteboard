@@ -76,6 +76,30 @@ function readElement(id: string, map: Y.Map<unknown>): SceneElement | null {
 export function createSceneDoc(doc: Y.Doc = new Y.Doc()) {
   const elements = doc.getMap<Y.Map<unknown>>("elements");
 
+  const undoManager = new Y.UndoManager(elements, {
+    trackedOrigins: new Set([LOCAL_ORIGIN]),
+    captureTimeout: 0,
+  });
+
+  function undo(): boolean {
+    return undoManager.undo() !== null;
+  }
+
+  function redo(): boolean {
+    return undoManager.redo() !== null;
+  }
+
+  function subscribeHistory(listener: () => void): () => void {
+    undoManager.on("stack-item-added", listener);
+    undoManager.on("stack-item-popped", listener);
+    undoManager.on("stack-cleared", listener);
+    return () => {
+      undoManager.off("stack-item-added", listener);
+      undoManager.off("stack-item-popped", listener);
+      undoManager.off("stack-cleared", listener);
+    };
+  }
+
   function snapshot(): Scene {
     const list: SceneElement[] = [];
     elements.forEach((map, id) => {
@@ -144,5 +168,11 @@ export function createSceneDoc(doc: Y.Doc = new Y.Doc()) {
     remove,
     removeMany,
     subscribe,
+    undo,
+    redo,
+    canUndo: () => undoManager.canUndo(),
+    canRedo: () => undoManager.canRedo(),
+    subscribeHistory,
+    clearHistory: () => undoManager.clear(),
   };
 }
