@@ -1,6 +1,6 @@
 export { renderScene } from "./lib/renderScene";
 export type { RenderOverlay } from "./lib/renderScene";
-export { getBounds, getSelectionBounds } from "./lib/bounds";
+export { getBounds, getSelectionBounds, TEXT_LINE_HEIGHT } from "./lib/bounds";
 export { getMovePatch } from "./lib/getMovePatch";
 export { hitTestScene, hitTestElement, elementsInRect } from "./lib/hitTest";
 export type { HitMode } from "./lib/hitTest";
@@ -20,3 +20,4 @@ export { sceneApi, useSceneStore } from "./model/sceneStore";
 export { LOCAL_ORIGIN } from "./model/sceneDoc";
 export type { ArrowElement, Scene, SceneElement } from "./model/types";
 export { rectTransform, scaleElementPatch } from "./lib/scale";
+export { measureTextWidth, TEXT_FONT_FAMILY } from "./lib/textMetrics";

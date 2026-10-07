@@ -54,6 +54,9 @@ export function hitTestElement(
       return pointInRect(point, inflateRect(getBounds(element), tolerance));
 
     case "free-draw": {
+      if (mode === "area") {
+        return pointInRect(point, inflateRect(getBounds(element), tolerance));
+      }
       const absolute = element.points.map((p) => ({
         x: element.x + p.x,
         y: element.y + p.y,

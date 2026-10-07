@@ -1,9 +1,9 @@
 import { normalizeRect, type Rect } from "@/shared/canvas";
 import { assertNever } from "@/shared/lib/assertNever";
 import type { SceneElement } from "../model/types";
+import { measureTextWidth } from "./textMetrics";
 
 export const TEXT_LINE_HEIGHT = 1.2;
-const TEXT_CHAR_WIDTH = 0.6;
 
 export function getBounds(element: SceneElement): Rect {
   switch (element.type) {
@@ -23,11 +23,12 @@ export function getBounds(element: SceneElement): Rect {
 
     case "text": {
       const lines = element.text.split("\n");
-      const longest = Math.max(...lines.map((line) => line.length));
       return {
         x: element.x,
         y: element.y,
-        width: longest * element.fontSize * TEXT_CHAR_WIDTH,
+        width: Math.max(
+          ...lines.map((line) => measureTextWidth(line, element.fontSize)),
+        ),
         height: lines.length * element.fontSize * TEXT_LINE_HEIGHT,
       };
     }
