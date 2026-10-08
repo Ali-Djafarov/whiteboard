@@ -1,6 +1,5 @@
-import { type RefObject } from "react";
-import { getLocalPoint } from "@/shared/canvas";
-import { screenToWorld, type Viewport } from "@/shared/canvas";
+import type { RefObject } from "react";
+import { getLocalPoint, screenToWorld, type Viewport } from "@/shared/canvas";
 import { useToolStore } from "../model/toolStore";
 import type { ToolContext } from "../model/types";
 import { tools } from "./tools";
@@ -57,6 +56,7 @@ export function useToolPointer(
     const point = screenToWorld(getLocalPoint(e, el), viewport);
     beginTextEditing(point, viewport.zoom, { createOverShapes: false });
   };
+
   return {
     onPointerDown,
     onPointerMove,

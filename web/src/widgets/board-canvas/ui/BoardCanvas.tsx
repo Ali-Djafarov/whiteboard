@@ -8,6 +8,8 @@ import styles from "./BoardCanvas.module.css";
 import { useToolHotkeys, useToolPointer, useToolStore } from "@/features/tools";
 import { useGridStore } from "@/features/grid";
 import { TextEditorOverlay } from "./TextEditorOverlay";
+import { CollaborationOverlay } from "@/features/collaboration/ui/CollaborationOverlay";
+import { usePublishCursor } from "@/features/collaboration";
 
 const getViewport = () => useViewportStore.getState().viewport;
 
@@ -27,7 +29,7 @@ export function BoardCanvas() {
   const pan = usePanZoom(containerRef);
   const tool = useToolPointer(containerRef, getViewport);
   useToolHotkeys();
-
+  usePublishCursor(containerRef, getViewport);
   const draw = useCallback(
     (ctx: CanvasRenderingContext2D) =>
       renderScene(ctx, scene, viewport, {
@@ -81,6 +83,7 @@ export function BoardCanvas() {
       onDoubleClick={tool.onDoubleClick}
     >
       <Canvas draw={draw} />
+      <CollaborationOverlay viewport={viewport} />
       <TextEditorOverlay />
     </div>
   );

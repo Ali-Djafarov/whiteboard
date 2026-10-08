@@ -6,8 +6,8 @@
 6. Scene store поверх Yjs   ✅
 7. Drawing tools            ✅
 8. Selection + hit testing  ✅
-9. Move / resize
-10. Undo/redo               (Y.UndoManager)
-11. Collaboration           (WebsocketProvider + presence-курсоры)
+9. Move / resize            ✅
+10. Undo/redo               ✅
+11. Collaboration           (WebsocketProvider + presence-курсоры) ✅
 12. Стили, панель свойств, экспорт PNG
 13. Деплой, тесты, README
