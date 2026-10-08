@@ -1,0 +1,64 @@
+.root {
+  position: absolute;
+  left: 16px;
+  bottom: 16px;
+
+  display: flex;
+  align-items: center;
+
+  height: 36px;
+
+  padding: 0 4px;
+
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+
+  box-shadow:
+    0 2px 6px rgb(0 0 0 / 8%),
+    0 8px 24px rgb(0 0 0 / 8%);
+
+  z-index: 20;
+}
+
+.button {
+  display: grid;
+  place-items: center;
+
+  width: 32px;
+  height: 28px;
+
+  padding: 0;
+
+  background: transparent;
+  border: 0;
+  border-radius: 6px;
+
+  color: #374151;
+
+  cursor: pointer;
+}
+
+.button:hover {
+  background: #f3f4f6;
+}
+
+.button:active {
+  background: #e5e7eb;
+}
+
+.button:focus-visible {
+  outline: 2px solid #6366f1;
+  outline-offset: 1px;
+}
+
+.value {
+  min-width: 52px;
+
+  text-align: center;
+
+  color: #374151;
+  font-size: 13px;
+  font-weight: 500;
+  user-select: none;
+}
