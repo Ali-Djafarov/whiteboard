@@ -6,13 +6,21 @@ import { createSelectTool } from "./selectTool";
 import { createShapeTool } from "./shapeTool";
 import { createTextTool } from "./textTool";
 
+const handTool: Tool = {
+  onPointerDown: () => false,
+  onPointerMove() {},
+  onPointerUp() {},
+  cancel: () => false,
+};
+
 export const tools: Record<ToolId, Tool> = {
   select: createSelectTool(),
+  hand: handTool,
   rectangle: createShapeTool("rectangle"),
   ellipse: createShapeTool("ellipse"),
   arrow: createArrowTool(),
   pen: createPenTool(),
-text: createTextTool(),
+  text: createTextTool(),
 };
 
 export function activateTool(id: ToolId): void {

@@ -26,7 +26,7 @@ export function BoardCanvas() {
   const cursor = useToolStore((s) => s.cursor);
   const editingId = useToolStore((s) => s.textEditor?.id ?? null);
 
-  const pan = usePanZoom(containerRef);
+  const pan = usePanZoom(containerRef, { forcePan: activeTool === "hand" });
   const tool = useToolPointer(containerRef, getViewport);
   useToolHotkeys();
   usePublishCursor(containerRef, getViewport);
@@ -53,7 +53,12 @@ export function BoardCanvas() {
   );
 
   const onPointerDown = (e: React.PointerEvent<HTMLElement>) => {
-    if (!pan.onPointerDown(e)) tool.onPointerDown(e);
+    const wasLocked = pan.isLocked();
+    if (pan.onPointerDown(e)) {
+      if (!wasLocked && pan.isLocked()) tool.onPointerCancel();
+      return;
+    }
+    tool.onPointerDown(e);
   };
   const onPointerMove = (e: React.PointerEvent<HTMLElement>) => {
     if (!pan.onPointerMove(e)) tool.onPointerMove(e);
@@ -73,6 +78,7 @@ export function BoardCanvas() {
         styles.root,
         activeTool !== "select" && styles.drawing,
         activeTool === "text" && styles.text,
+        activeTool === "hand" && styles.hand,
       ]
         .filter(Boolean)
         .join(" ")}

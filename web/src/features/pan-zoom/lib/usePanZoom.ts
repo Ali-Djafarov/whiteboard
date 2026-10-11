@@ -1,15 +1,24 @@
-import { useEffect, useRef, type RefObject } from "react";
-import { useViewportStore } from "../model/viewportStore";
+import { useEffect, useRef, useState, type RefObject } from "react";
+import { getLocalPoint, type Point } from "@/shared/canvas";
 import { isModalOpen, isTextEditingTarget } from "@/shared/lib/dom";
-import { getLocalPoint } from "@/shared/canvas";
+import { useViewportStore } from "../model/viewportStore";
+import { createTouchTracker } from "./touchTracker";
 
 const ZOOM_SENSITIVITY = 0.01;
-const MAX_WHEEL_DELTA = 25;
+const MAX_WHEEL_DELTA = 12;
 
-export function usePanZoom(ref: RefObject<HTMLElement | null>) {
+type Options = {
+  forcePan?: boolean;
+};
+
+export function usePanZoom(
+  ref: RefObject<HTMLElement | null>,
+  { forcePan = false }: Options = {},
+) {
   const spaceDown = useRef(false);
   const dragging = useRef(false);
   const last = useRef({ x: 0, y: 0 });
+  const [touch] = useState(createTouchTracker);
 
   useEffect(() => {
     const el = ref.current;
@@ -52,6 +61,7 @@ export function usePanZoom(ref: RefObject<HTMLElement | null>) {
 
     const onBlur = () => {
       spaceDown.current = false;
+      touch.reset();
       if (!dragging.current) el.style.cursor = "";
     };
 
@@ -66,10 +76,25 @@ export function usePanZoom(ref: RefObject<HTMLElement | null>) {
       window.removeEventListener("keyup", onKeyUp);
       window.removeEventListener("blur", onBlur);
     };
-  }, [ref]);
+  }, [ref, touch]);
+
+  const toLocal = (point: Point): Point => {
+    const el = ref.current;
+    return el
+      ? getLocalPoint({ clientX: point.x, clientY: point.y }, el)
+      : point;
+  };
 
   const onPointerDown = (e: React.PointerEvent<HTMLElement>): boolean => {
-    if (e.button === 1 || (e.button === 0 && spaceDown.current)) {
+    if (e.pointerType === "touch") {
+      touch.down(e.pointerId, { x: e.clientX, y: e.clientY }, e.isPrimary);
+      if (touch.isLocked) {
+        dragging.current = false;
+        return true;
+      }
+    }
+
+    if (e.button === 1 || (e.button === 0 && (spaceDown.current || forcePan))) {
       e.preventDefault();
       dragging.current = true;
       last.current = { x: e.clientX, y: e.clientY };
@@ -81,6 +106,16 @@ export function usePanZoom(ref: RefObject<HTMLElement | null>) {
   };
 
   const onPointerMove = (e: React.PointerEvent<HTMLElement>): boolean => {
+    if (e.pointerType === "touch") {
+      const step = touch.move(e.pointerId, { x: e.clientX, y: e.clientY });
+      if (step) {
+        useViewportStore
+          .getState()
+          .pinchTo(toLocal(step.from), toLocal(step.to), step.factor);
+      }
+      if (touch.isLocked) return true;
+    }
+
     if (!dragging.current) return false;
     useViewportStore
       .getState()
@@ -90,6 +125,7 @@ export function usePanZoom(ref: RefObject<HTMLElement | null>) {
   };
 
   const endDrag = (e: React.PointerEvent<HTMLElement>): boolean => {
+    if (e.pointerType === "touch" && touch.up(e.pointerId)) return true;
     if (!dragging.current) return false;
     dragging.current = false;
     e.currentTarget.releasePointerCapture(e.pointerId);
@@ -102,5 +138,6 @@ export function usePanZoom(ref: RefObject<HTMLElement | null>) {
     onPointerMove,
     onPointerUp: endDrag,
     onPointerCancel: endDrag,
+    isLocked: () => touch.isLocked,
   };
 }

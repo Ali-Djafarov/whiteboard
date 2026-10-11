@@ -5,10 +5,6 @@
   touch-action: none;
 }
 
-.drawing {
-  cursor: crosshair;
-}
-
 .root[data-cursor="move"] {
   cursor: move;
 }
@@ -33,10 +29,6 @@
   cursor: crosshair;
 }
 
-.text {
-  cursor: text;
-}
-
 .textEditor {
   position: absolute;
   z-index: 5;
@@ -51,4 +43,16 @@
   white-space: pre;
   overflow: hidden;
   resize: none;
+}
+
+.drawing {
+  cursor: crosshair;
+}
+
+.text {
+  cursor: text;
+}
+
+.hand {
+  cursor: grab;
 }

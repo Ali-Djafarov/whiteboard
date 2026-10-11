@@ -1,7 +1,7 @@
 import type { Point } from "@/shared/canvas";
 
 export type ToolId =
-  "select" | "rectangle" | "ellipse" | "arrow" | "pen" | "text";
+  "select" | "rectangle" | "ellipse" | "arrow" | "pen" | "text" | "hand";
 
 export type ToolContext = { point: Point; zoom: number; shiftKey: boolean };
 
