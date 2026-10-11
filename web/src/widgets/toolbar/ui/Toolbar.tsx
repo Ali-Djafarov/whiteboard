@@ -8,12 +8,15 @@ import {
   Type,
   Undo2,
   Redo2,
+  Hand,
+  Trash2,
 } from "lucide-react";
-import { activateTool, useToolStore, type ToolId } from "@/features/tools";
+import { activateTool, deleteSelection, useToolStore, type ToolId } from "@/features/tools";
 import styles from "./Toolbar.module.css";
 import { useGridStore } from "@/features/grid";
 import { sceneApi, useHistoryStore } from "@/entities/scene";
 const ITEMS = [
+  { id: "hand", label: "Рука", hotkey: "H", Icon: Hand },
   { id: "select", label: "Выбор", hotkey: "V", Icon: MousePointer2 },
   { id: "rectangle", label: "Прямоугольник", hotkey: "R", Icon: Square },
   { id: "ellipse", label: "Эллипс", hotkey: "O", Icon: Circle },
@@ -29,6 +32,7 @@ const ITEMS = [
 
 export function Toolbar() {
   const activeTool = useToolStore((s) => s.activeTool);
+  const selectedIds = useToolStore((s) => s.selectedIds);
   const isGridVisible = useGridStore((s) => s.isVisible);
   const toggleGrid = useGridStore((s) => s.toggleGrid);
   const canUndo = useHistoryStore((s) => s.canUndo);
@@ -73,6 +77,16 @@ export function Toolbar() {
         title="Повторить (Ctrl/⌘ + Shift + Z)"
       >
         <Redo2 size={18} />
+      </button>
+      <button
+        type="button"
+        className={styles.button}
+        disabled={selectedIds.length === 0}
+        onClick={deleteSelection}
+        aria-label="Удалить выделенное"
+        title="Удалить (Delete)"
+      >
+        <Trash2 size={18} />
       </button>
       <button
         type="button"

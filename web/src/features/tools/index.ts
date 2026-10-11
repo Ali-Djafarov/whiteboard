@@ -5,3 +5,4 @@ export { useToolPointer } from "./lib/useToolPointer";
 export { useToolHotkeys } from "./lib/useToolHotkeys";
 export { commitTextEditor } from "./lib/textEditing";
 export type { TextEditorState } from "./model/types";
+export { deleteSelection } from "./lib/selection";

@@ -4,6 +4,7 @@ import type { ToolId } from "../model/types";
 import { activateTool, tools } from "./tools";
 import { sceneApi } from "@/entities/scene";
 import { isModalOpen, isTextEditingTarget } from "@/shared/lib/dom";
+import { deleteSelection } from "./selection";
 
 const KEY_TO_TOOL: Record<string, ToolId> = {
   KeyV: "select",
@@ -12,6 +13,7 @@ const KEY_TO_TOOL: Record<string, ToolId> = {
   KeyA: "arrow",
   KeyP: "pen",
   KeyT: "text",
+  KeyH: "hand",
 };
 
 const isGestureActive = (): boolean => {
@@ -39,7 +41,7 @@ export function useToolHotkeys(): void {
         handleHistoryKey(e);
         return;
       }
-      
+
       const { activeTool, selectedIds, setSelection } = useToolStore.getState();
 
       if (e.code === "Escape") {
@@ -55,6 +57,7 @@ export function useToolHotkeys(): void {
       if (e.code === "Delete" || e.code === "Backspace") {
         if (selectedIds.length === 0) return;
         e.preventDefault();
+        deleteSelection();
         sceneApi.removeMany(selectedIds);
         setSelection([]);
         return;
