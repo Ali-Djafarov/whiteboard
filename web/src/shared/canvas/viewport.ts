@@ -76,3 +76,18 @@ export function worldToScreen(point: Point, viewport: Viewport): Point {
     y: point.y * viewport.zoom + viewport.offsetY,
   };
 }
+
+export function pinchTo(
+  viewport: Viewport,
+  from: Point,
+  to: Point,
+  factor: number,
+): Viewport {
+  const zoom = clampZoom(viewport.zoom * factor);
+  const world = screenToWorld(from, viewport);
+  return {
+    zoom,
+    offsetX: to.x - world.x * zoom,
+    offsetY: to.y - world.y * zoom,
+  };
+}

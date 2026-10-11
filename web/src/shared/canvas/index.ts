@@ -9,6 +9,7 @@ export {
   MIN_ZOOM,
   MAX_ZOOM,
   stepZoomToward,
+  pinchTo,
 } from "./viewport";
 export type { Viewport, ZoomTarget } from "./viewport";
 export {

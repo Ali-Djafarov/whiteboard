@@ -2,6 +2,7 @@ import { create } from "zustand";
 import {
   panBy as panViewport,
   zoomAt as zoomViewport,
+  pinchTo as pinchViewport,
   type Point,
   type Viewport,
 } from "@/shared/canvas";
@@ -13,6 +14,7 @@ type ViewportState = {
   panBy: (dx: number, dy: number) => void;
   zoomAt: (point: Point, factor: number) => void;
   zoomAtSmooth: (point: Point, factor: number) => void;
+  pinchTo: (from: Point, to: Point, factor: number) => void;
 };
 
 export const useViewportStore = create<ViewportState>((set, get) => {
@@ -40,6 +42,10 @@ export const useViewportStore = create<ViewportState>((set, get) => {
         return;
       }
       animator.zoomAt(point, factor);
+    },
+    pinchTo: (from, to, factor) => {
+      animator.stop();
+      set((s) => ({ viewport: pinchViewport(s.viewport, from, to, factor) }));
     },
   };
 });
