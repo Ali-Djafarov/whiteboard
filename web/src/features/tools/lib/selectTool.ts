@@ -47,7 +47,7 @@ type ResizeTarget = { elements: SceneElement[]; bounds: Rect };
 
 type State =
   | { kind: "idle" }
-  | { kind: "marquee"; origin: Point; base: string[] }
+  | { kind: "marquee"; origin: Point; base: string[]; previous: string[] }
   | {
       kind: "moving";
       origin: Point;
@@ -204,7 +204,12 @@ export function createSelectTool(
               : [...current, id],
           );
         } else if (target.kind === "empty") {
-          state = { kind: "marquee", origin: point, base: current };
+          state = {
+            kind: "marquee",
+            origin: point,
+            base: current,
+            previous: current,
+          };
         }
         return true;
       }
@@ -235,7 +240,7 @@ export function createSelectTool(
         return true;
       }
 
-      state = { kind: "marquee", origin: point, base: [] };
+      state = { kind: "marquee", origin: point, base: [], previous: current };
       store().setSelection([]);
       return true;
     },
@@ -323,6 +328,7 @@ export function createSelectTool(
         case "marquee":
           store().setSelection(s.base);
           store().setMarquee(null);
+          store().setSelection(s.previous);
           return true;
         case "moving":
         case "resizing":
